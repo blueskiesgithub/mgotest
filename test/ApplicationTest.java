@@ -14,6 +14,7 @@ import play.data.validation.ValidationError;
 import play.data.validation.Constraints.RequiredValidator;
 import play.i18n.Lang;
 import play.libs.F;
+import play.libs.Json;
 import play.libs.F.*;
 
 import static play.test.Helpers.*;
@@ -43,18 +44,36 @@ public class ApplicationTest {
 
     @Test
     public void authenticate() {
+    	running(fakeApplication(), new Runnable() {
+    	       public void run() {
+    	    	   String body = "{ \"name\": \"ash\", \"password\": \"blah\"}";
+	    	       	JsonNode json = Json.parse(body);
+	    	       	FakeRequest request = new FakeRequest("POST", "v1/authenticate").withJsonBody(json);
+	    	       	Result result = callAction(
+	    	       			controllers.routes.ref.Application.authenticate(), request
+	    	       			);
+	    	       	assertThat(play.test.Helpers.status(result)).isEqualTo(OK);
+    	       }
+    	    });
+    	/*
     	//Verify it returns ok for a good user and password
+    	String body = "{ \"name\": \"ash\", \"password\": \"blah\"}";
+    	JsonNode json = Json.parse(body);
+    	FakeRequest request = new FakeRequest("POST", "v1/authenticate").withJsonBody(json);
     	Result result = callAction(
-    		controllers.routes.ref.Application.authenticate("{ name: 'ash', password: 'blah'}")
+    			controllers.routes.ref.Application.authenticate(), request
     			);
     	assertThat(play.test.Helpers.status(result)).isEqualTo(OK);
     	//Verify it DOES NOT return ok for a bad user and password
+    	body = "{ \"name\": \"unknown\", \"unknown\": \"blah\"}";
+    	json = Json.parse(body);
+    	request = new FakeRequest("POST", "v1/authenticate").withJsonBody(json);
     	result = callAction(
-    			controllers.routes.ref.Application.authenticate("{name: 'unknown', password: 'unknown'}")
+    			controllers.routes.ref.Application.authenticate(), request
     			);
-    	assertThat(play.test.Helpers.status(result)).isNotEqualTo(OK);
+    	assertThat(play.test.Helpers.status(result)).isNotEqualTo(OK);*/
     }
-    
+    /*
     @Test
     public void allUsers() {
     	Result result = callAction(
@@ -86,7 +105,7 @@ public class ApplicationTest {
     	assertThat(files.contains("three"));
     	assertThat(files.contains("four"));
     	
-    }
+    }*/
     
 
 }
