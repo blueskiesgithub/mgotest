@@ -43,22 +43,28 @@ public class ApplicationTest {
 
     @Test
     public void authenticate() {
+    	//Verify it returns ok for a good user and password
     	Result result = callAction(
     		controllers.routes.ref.Application.authenticate("{ name: 'ash', password: 'blah'}")
     			);
     	assertThat(play.test.Helpers.status(result)).isEqualTo(OK);
+    	//Verify it DOES NOT return ok for a bad user and password
+    	result = callAction(
+    			controllers.routes.ref.Application.authenticate("{name: 'unknown', password: 'unknown'}")
+    			);
+    	assertThat(play.test.Helpers.status(result)).isNotEqualTo(OK);
     }
     
     @Test
     public void allUsers() {
     	Result result = callAction(
-    			controllers.routes.ref.Application.allUsers("male"))
+    			controllers.routes.ref.Application.allUsers("male")
     			);
         String users = contentAsString(result);
-    	assertThat(users.contains("ash");
-    	assertThat(users.contains("neena");
-    	assertThat(users.contains("vanessa");
-    	assertThat(users.contains("devin");
+    	assertThat(users.contains("ash"));
+    	assertThat(users.contains("neena"));
+    	assertThat(users.contains("vanessa"));
+    	assertThat(users.contains("devin"));
     }
     
     @Test
@@ -74,7 +80,11 @@ public class ApplicationTest {
     	Result result = callAction(
     			controllers.routes.ref.Application.listFiles()
     			);
-    	assertThat(
+    	String files = contentAsString(result);
+    	assertThat(files.contains("one"));
+    	assertThat(files.contains("two"));
+    	assertThat(files.contains("three"));
+    	assertThat(files.contains("four"));
     	
     }
     
