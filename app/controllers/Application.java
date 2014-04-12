@@ -2,10 +2,14 @@ package controllers;
 
 import models.Users;
 import play.*;
+import play.libs.Json;
 import play.mvc.*;
 
 import views.html.*;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.*;
+import java.io.*;
 
 public class Application extends Controller {
 
@@ -47,14 +51,15 @@ public class Application extends Controller {
     }
     
     public static Result authenticate() {
+    	//Cast the body to json and check for the name and password fields
     	JsonNode json = request().body().asJson();
     	if (json != null)
     	{
     		String name = json.findPath("name").textValue();
-    		System.out.println(name);
+    
     	    if(name != null) {
     	      String password = json.findPath("password").textValue();
-    	      System.out.println(password);
+    	      
     	      if (password != null)
     	      {
     	    	  Users u = Users.find.where().eq("name", name).findUnique();
@@ -70,11 +75,36 @@ public class Application extends Controller {
     	return badRequest("Authentication failure.");
     }
     
-    public static Result allUsers() {
-    	return badRequest();
+    public static Result allUsers(String gender) {
+    	//Return all users whose gender matches.
+    	
+    	List<Users> uList = Users.find.where().eq("gender", gender).findList();
+    	JsonNode json = Json.toJson(uList);
+    	return ok(json.toString());
     }
     
-    public static Result listFiles() {
+    public static Result listFiles(String directory) {
+    	File folder = new File(directory);
+    	//Attempt to list the files in the directory.
+    	//We ignore directories and return bad request upon failure
+    	try
+    	{
+    		File[] listOfFiles = folder.listFiles();
+    		List<String> filesOnlyList = new ArrayList<String>(); 
+    		for (File entry : listOfFiles)
+    		{
+    			if (entry.isFile())
+    				filesOnlyList.add(entry.getName());
+    		}
+    		
+    		JsonNode json = Json.toJson(filesOnlyList);
+    		return ok(json.toString());
+    	}
+    	catch(Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+    	    
     	return badRequest();
     }
     
