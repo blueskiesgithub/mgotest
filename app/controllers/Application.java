@@ -1,5 +1,6 @@
 package controllers;
 
+import models.SystemStatus;
 import models.Users;
 import play.*;
 import play.libs.Json;
@@ -10,6 +11,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.*;
 import java.io.*;
+
+import play.db.DB;
+import javax.sql.DataSource;
 
 public class Application extends Controller {
 
@@ -109,7 +113,19 @@ public class Application extends Controller {
     }
     
     public static Result status() {
-    	return badRequest();
+    	//For the purposes of this test project we simply test to make sure
+    	//that we can connect the the database.
+    	List<SystemStatus> statusList = new ArrayList<SystemStatus>();
+    	DataSource ds = DB.getDataSource();
+    	if (ds != null)
+    	{
+    		SystemStatus dbStatus = new SystemStatus();
+    		dbStatus.name = "database";
+    		dbStatus.state = "ok";
+    		statusList.add(dbStatus);
+    	}
+    	JsonNode json = Json.toJson(statusList);
+    	return ok(json.toString());
     }
 
 }

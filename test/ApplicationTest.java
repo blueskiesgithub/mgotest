@@ -94,14 +94,21 @@ public class ApplicationTest {
     	
     	
     }
-    /*
+    
     @Test
     public void status() {
-    	Result result = callAction(
-    			controllers.routes.ref.Application.status()
-    			);
-    	assertThat(play.test.Helpers.status(result)).isEqualTo(OK);
-    }*/
+    	running(fakeApplication(), new Runnable() {
+    		public void run() {
+
+    	    	Result result = callAction(
+    	    			controllers.routes.ref.Application.status()
+    	    			);
+    	    	String statusText = contentAsString(result);
+    	    	assertThat(statusText).contains("database");
+    	    	assertThat(statusText).contains("ok");
+    		}
+ 	    });
+    }
     
     @Test
     public void listFiles() {
