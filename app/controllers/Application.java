@@ -109,21 +109,22 @@ public class Application extends Controller {
     		e.printStackTrace();
     	}
     	    
-    	return badRequest();
+    	return badRequest("Could not list files in directory.");
     }
     
     public static Result status() {
     	//For the purposes of this test project we simply test to make sure
     	//that we can connect the the database.
+    	SystemStatus dbStatus = new SystemStatus();
+		dbStatus.name = "database";
     	List<SystemStatus> statusList = new ArrayList<SystemStatus>();
     	DataSource ds = DB.getDataSource();
     	if (ds != null)
-    	{
-    		SystemStatus dbStatus = new SystemStatus();
-    		dbStatus.name = "database";
     		dbStatus.state = "ok";
-    		statusList.add(dbStatus);
-    	}
+    	else
+    		dbStatus.state = "failed";
+    		
+    	statusList.add(dbStatus);
     	JsonNode json = Json.toJson(statusList);
     	return ok(json.toString());
     }

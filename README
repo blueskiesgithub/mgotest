@@ -1,4 +1,42 @@
-This is your new Play application
-=====================================
+1. I chose to use the Play Framework with Java for this exercise. My reasons being that
+it is the framework I have the most experience with and it is also a very high quality 
+framework.  The application supports versioning through the URL.   For the database I chose mysql as I 
+have not yet worked with mongo or nosql solutions.  My research indicates that nosql can be better for 
+certain situations so it is possible it could be a good choice for this exercise. However, mysql 
+performs adequately as well. This solution was developed on Ubuntu 13.10. 
 
-This file will be packaged with your application, when using `play dist`.
+2. I did research about versioning support and found several different opinions about how to support it. 
+It seemed that for this exercise, versioning directly in the URL was best as it is more challenging
+to set headers, etc. that it is to simply paste a link in a web browser.  This would enable
+quick verification of the solution.
+
+3. To support pagination, the methods could have a extra parameter "page".  Assuming that the data
+is divided into chunks of 100, page "0" could return the first 100, and page "1" could return the next 100.
+
+4. Setup:
+
+a. Install MYSQL server on the machine. Use the password "root" and a blank password.
+b. Make sure that the server is running. 
+c. In the server, create a database called "mgo".
+d. Download and install the play framework version 2.2.2
+e. Make sure that the framework is installed and in the system PATH by typing "play" at a command prompt.
+f. Sync the project from github to a directory on your machine.
+g. Inside the directory, type "play run" to start the application.
+h. To initialize the database, I have created a special route. To call it, open a web browser and
+   type "http://localhost:9000/populate".  This will place several entries in the database.
+i. Now would be a good time to run the unit tests. To do so, shut down the application by typing 
+   CTRL + D.  Now type "make test".  This will unit test the various methods.
+j. If desired, manual testing can be done in the browser. To do so, type "play run" in the directory.
+k. To test the status route, type "http://localhost:9000/v1/status". You should see a json structure
+   with the status of the database.
+l. To test the user listing route, type "http://localhost:9000/v1/allusers?gender=male".  You will
+   see a listing of the male users.  
+m. To test the file listing route, first decide on a directory, i.e. /home/myuser.  Now type
+   "http://localhost:9000/v1/listfiles?directory=/home/myuser". 
+n. To test the user authentication route manually, it will be quite challenging because it requires
+   posting a JSON structure. The easiest way is to install the POSTMAN plugin for the chrome browser.
+   Select a RAW JSON POST payload that looks like: "{ "name": "ash", "password": "blah"}".
+   Add a header called "Content-Type" with the value "application/json".  Now enter the route
+   "http://localhost:9000/v1/authenticate". 
+
+
