@@ -25,7 +25,7 @@ g. Inside the directory, type "play run" to start the application.
 h. To initialize the database, I have created a special route. To call it, open a web browser and
    type "http://localhost:9000/populate".  This will place several entries in the database.
 i. Now would be a good time to run the unit tests. To do so, shut down the application by typing 
-   CTRL + D.  Now type "make test".  This will unit test the various methods.
+   CTRL + D.  Now type "play test".  This will unit test the various methods.
 j. If desired, manual testing can be done in the browser. To do so, type "play run" in the directory.
 k. To test the status route, type "http://localhost:9000/v1/status". You should see a json structure
    with the status of the database.
